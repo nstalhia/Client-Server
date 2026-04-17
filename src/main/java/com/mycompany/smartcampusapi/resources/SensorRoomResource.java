@@ -14,7 +14,6 @@ import java.util.*;
 @Consumes(MediaType.APPLICATION_JSON)
 public class SensorRoomResource {
 
-    // Shared in-memory storage
     public static Map<String, SensorRoom> rooms = new HashMap<>();
 
     @GET

@@ -19,7 +19,7 @@ public class SensorResource {
 
     public static Map<String, Sensor> sensors = new HashMap<>();
 
-    // SAFE ACCESS METHOD (fixes your crash)
+  
     private Map<String, SensorRoom> getRooms() {
         return SensorRoomResource.rooms;
     }

@@ -14,7 +14,7 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
     @Override
     public Response toResponse(Throwable ex) {
 
-        ex.printStackTrace(); // 🔥 THIS IS KEY
+        ex.printStackTrace();
 
         return Response.status(500)
                 .entity("{\"error\":\"" + ex.getClass().getSimpleName() + ": " + ex.getMessage() + "\"}")
