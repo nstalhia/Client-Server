@@ -5,11 +5,15 @@
 
 package com.mycompany.smartcampusapi.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SensorRoom {
 
     private String id;
     private String name;
     private int capacity;
+    private List<String> sensorIds = new ArrayList<>();
 
     public SensorRoom() {}
 
@@ -35,5 +39,13 @@ public class SensorRoom {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public List<String> getSensorIds() {
+        return sensorIds;
+    }
+
+    public void setSensorIds(List<String> sensorIds) {
+        this.sensorIds = sensorIds;
     }
 }

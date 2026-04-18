@@ -6,10 +6,27 @@ package com.mycompany.smartcampusapi.model;
 
 public class SensorReading {
 
+    private String id;
+    private long timestamp;
     private double value;
-    private String timestamp;
 
     public SensorReading() {}
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public double getValue() {
         return value;
@@ -17,13 +34,5 @@ public class SensorReading {
 
     public void setValue(double value) {
         this.value = value;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
     }
 }

@@ -47,7 +47,6 @@ public class Sensor {
         this.currentValue = currentValue;
     }
 
-    
     public String getStatus() {
         return status;
     }
@@ -56,5 +55,4 @@ public class Sensor {
         this.status = status;
     }
 }
-    
 

@@ -5,6 +5,9 @@
 package com.mycompany.smartcampusapi.resources;
 
 import com.mycompany.smartcampusapi.model.Sensor;
+import com.mycompany.smartcampusapi.model.SensorReading;
+import com.mycompany.smartcampusapi.exceptions.LinkedResourceNotFoundException;
+import com.mycompany.smartcampusapi.exceptions.SensorUnavailableException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -16,55 +19,52 @@ public class SensorReadingResource {
 
     private String sensorId;
 
-    private static Map<String, List<Map<String, Object>>> readings = new HashMap<>();
+    private static Map<String, List<SensorReading>> readings = new HashMap<>();
 
     public SensorReadingResource(String sensorId) {
         this.sensorId = sensorId;
     }
 
+   
     @GET
     public Response getReadings() {
-
-        List<Map<String, Object>> list =
-                readings.getOrDefault(sensorId, new ArrayList<>());
-
-        return Response.ok(list).build();
+        return Response.ok(
+                readings.getOrDefault(sensorId, new ArrayList<>())
+        ).build();
     }
 
     @POST
-    public Response addReading(Map<String, Object> reading) {
+    public Response addReading(SensorReading reading) {
 
-        try {
-            Sensor sensor = SensorResource.sensors.get(sensorId);
+        Sensor sensor = SensorResource.sensors.get(sensorId);
 
-            if (sensor == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("{\"error\":\"Sensor not found\"}")
-                        .build();
-            }
-
-            if (reading == null || !reading.containsKey("value")) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("{\"error\":\"Missing value\"}")
-                        .build();
-            }
-
-            double value = Double.parseDouble(reading.get("value").toString());
-
-            readings.putIfAbsent(sensorId, new ArrayList<>());
-            readings.get(sensorId).add(reading);
-
-            sensor.setCurrentValue(value);
-
-            return Response.status(Response.Status.CREATED)
-                    .entity(reading)
-                    .build();
-
-        } catch (Exception e) {
-
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\":\"Reading processing failed\"}")
-                    .build();
+      
+        if (sensor == null) {
+            throw new LinkedResourceNotFoundException("Sensor not found");
         }
+
+        
+        if ("MAINTENANCE".equalsIgnoreCase(sensor.getStatus())) {
+            throw new SensorUnavailableException("Sensor is under maintenance");
+        }
+
+        if (reading == null) {
+            throw new BadRequestException("Reading cannot be null");
+        }
+
+      
+        reading.setId(UUID.randomUUID().toString());
+        reading.setTimestamp(System.currentTimeMillis());
+
+    
+        readings.putIfAbsent(sensorId, new ArrayList<>());
+        readings.get(sensorId).add(reading);
+
+       
+        sensor.setCurrentValue(reading.getValue());
+
+        return Response.status(Response.Status.CREATED)
+                .entity(reading)
+                .build();
     }
 }
