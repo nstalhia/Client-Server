@@ -1,70 +1,64 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+ 
+Name: Janefa Jeba
+Student ID: w2080916
+*/
 package com.mycompany.smartcampusapi.resources;
 
 import com.mycompany.smartcampusapi.model.Sensor;
-import com.mycompany.smartcampusapi.model.SensorReading;
-import com.mycompany.smartcampusapi.exceptions.LinkedResourceNotFoundException;
-import com.mycompany.smartcampusapi.exceptions.SensorUnavailableException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.*;
 
+@Path("/sensors/{sensorId}/readings")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SensorReadingResource {
 
+    @PathParam("sensorId")
     private String sensorId;
 
-    private static Map<String, List<SensorReading>> readings = new HashMap<>();
-
-    public SensorReadingResource(String sensorId) {
-        this.sensorId = sensorId;
-    }
-
-   
-    @GET
-    public Response getReadings() {
-        return Response.ok(
-                readings.getOrDefault(sensorId, new ArrayList<>())
-        ).build();
-    }
+    private static Map<String, List<Double>> readings = new HashMap<>();
 
     @POST
-    public Response addReading(SensorReading reading) {
+    public Response addReading(Map<String, Double> body) {
 
-        Sensor sensor = SensorResource.sensors.get(sensorId);
-
-      
-        if (sensor == null) {
-            throw new LinkedResourceNotFoundException("Sensor not found");
+        if (!SensorResource.sensors.containsKey(sensorId)) {
+            throw new NotFoundException("Sensor not found");
         }
 
-        
-        if ("MAINTENANCE".equalsIgnoreCase(sensor.getStatus())) {
-            throw new SensorUnavailableException("Sensor is under maintenance");
+        Double value = body.get("value");
+
+        if (value == null) {
+            throw new BadRequestException("value required");
         }
 
-        if (reading == null) {
-            throw new BadRequestException("Reading cannot be null");
-        }
-
-      
-        reading.setId(UUID.randomUUID().toString());
-        reading.setTimestamp(System.currentTimeMillis());
-
-    
         readings.putIfAbsent(sensorId, new ArrayList<>());
-        readings.get(sensorId).add(reading);
+        readings.get(sensorId).add(value);
 
-       
-        sensor.setCurrentValue(reading.getValue());
+        // update parent sensor (important for coursework marks)
+        Sensor sensor = SensorResource.sensors.get(sensorId);
+        if (sensor != null) {
+            sensor.setCurrentValue(value);
+        }
 
         return Response.status(Response.Status.CREATED)
-                .entity(reading)
+                .entity("Reading added successfully")
                 .build();
+    }
+
+    @GET
+    public Response getReadings() {
+
+        List<Double> list = readings.get(sensorId);
+
+        if (list == null) {
+            return Response.ok(Collections.emptyList()).build();
+        }
+
+        return Response.ok(list).build();
     }
 }

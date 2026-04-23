@@ -1,7 +1,11 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+ 
+Name: Janefa Jeba
+Student ID: w2080916
+
+*/
 
 package com.mycompany.smartcampusapi.model;
 
@@ -9,11 +13,22 @@ public class Sensor {
 
     private String id;
     private String type;
+    private Double currentValue;
     private String roomId;
-    private double currentValue;
-    private String status = "ACTIVE";
+    private String status;
 
-    public Sensor() {}
+    public Sensor() {
+    }
+
+    public Sensor(String id, String type, Double currentValue, String roomId, String status) {
+        this.id = id;
+        this.type = type;
+        this.currentValue = currentValue;
+        this.roomId = roomId;
+        this.status = status;
+    }
+
+    
 
     public String getId() {
         return id;
@@ -31,20 +46,20 @@ public class Sensor {
         this.type = type;
     }
 
+    public Double getCurrentValue() {
+        return currentValue;
+    }
+
+    public void setCurrentValue(Double currentValue) {
+        this.currentValue = currentValue;
+    }
+
     public String getRoomId() {
         return roomId;
     }
 
     public void setRoomId(String roomId) {
         this.roomId = roomId;
-    }
-
-    public double getCurrentValue() {
-        return currentValue;
-    }
-
-    public void setCurrentValue(double currentValue) {
-        this.currentValue = currentValue;
     }
 
     public String getStatus() {
@@ -55,4 +70,3 @@ public class Sensor {
         this.status = status;
     }
 }
-
