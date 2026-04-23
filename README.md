@@ -1,3 +1,7 @@
+Name: Janefa Jeba
+Student ID: w2080916
+
+
 ## API Overview
 
 This Smart Campus API is a RESTful web service built using JAX-RS and deployed on Apache Tomcat.
@@ -55,6 +59,9 @@ curl -X POST http://localhost:8080/api/v1/sensors/S1/readings \
 -d '{"value":12.5,"timestamp":"now"}'
 
 ## Report: 
+
+Name: Janefa Jeba
+Student ID: w2080916
 
 Part 1: Service Architecture & Setup
 
